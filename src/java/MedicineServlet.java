@@ -15,12 +15,10 @@ import java.util.List;
 @WebServlet("/MedicineServlet")
 public class MedicineServlet extends HttpServlet {
 
-    @EJB
-    private MedicineEJB medicineEJB;
-
-    @Resource(name = "aptekaDB")    //java:comp/env/jdbc/aptekaDB
+    @Resource(name = "java:global/jdbc/aptekaDB")    //java:comp/env/jdbc/aptekaDB
     private DataSource dataSource;
 
+    @EJB
     private MedicineDAO medicineDAO;
 
     @Override
@@ -37,7 +35,7 @@ public class MedicineServlet extends HttpServlet {
         if ("edit".equals(action)) {
             // Логика для редактирования
             int id = Integer.parseInt(request.getParameter("id"));
-            Medicine medicine = medicineEJB.getMedicineById(id);
+            Medicine medicine = medicineDAO.getMedicineById(id);
 
             // Убедимся, что medicine не равен null, прежде чем установить атрибут
             if (medicine != null) {
@@ -46,7 +44,7 @@ public class MedicineServlet extends HttpServlet {
         }
 
         // Логика для отображения списка лекарств
-        List<Medicine> medicines = medicineEJB.getAllMedicines();
+        List<Medicine> medicines = medicineDAO.getAllMedicines();
         request.setAttribute("medicines", medicines);
 
         // Перенаправление на JSP страницу

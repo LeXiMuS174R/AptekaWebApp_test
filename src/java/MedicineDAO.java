@@ -1,5 +1,7 @@
 // MedicineDAO.java
 
+import jakarta.annotation.PreDestroy;
+import jakarta.ejb.Stateless;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +12,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.sql.*;
 
+@Stateless
 public class MedicineDAO {
 
     @PersistenceContext(unitName = "apteka_medicine")
@@ -29,6 +32,19 @@ public class MedicineDAO {
         } catch (SQLException e) {
             throw new RuntimeException("SQLException class not found", e);
         }
+    }
+
+//    public List<Medicine> getAllMedicines() {
+//        return em.createQuery("SELECT m FROM Medicine m", Medicine.class).getResultList();
+//    }
+//
+//    public Medicine getMedicineById(int id) {
+//        return em.find(Medicine.class, id);
+//    }
+
+    @PreDestroy
+    public void destruct() {
+        em.close();
     }
 
     MedicineDAO(jakarta.jms.Connection dbConnection) {
