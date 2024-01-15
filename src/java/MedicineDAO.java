@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.sql.*;
 
 public class MedicineDAO {
 
@@ -16,11 +17,18 @@ public class MedicineDAO {
 
     private final Connection connection;
 
-//    public void setConnection(Connection connection) {
-//        this.connection = connection;
-//    }
     public MedicineDAO(Connection connection) {
         this.connection = connection;
+    }
+
+    public static jakarta.jms.Connection getConnection() {
+        try {
+            // Assume DriverManager is imported and configured properly
+            jakarta.jms.Connection connection = (jakarta.jms.Connection) DriverManager.getConnection("jdbc:postgresql://localhost:5432/apteka_medicine", "postgres", "qwe123");
+            return connection;
+        } catch (SQLException e) {
+            throw new RuntimeException("SQLException class not found", e);
+        }
     }
 
     MedicineDAO(jakarta.jms.Connection dbConnection) {

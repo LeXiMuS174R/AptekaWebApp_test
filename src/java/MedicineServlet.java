@@ -3,25 +3,33 @@
 import jakarta.activation.DataSource;
 import jakarta.annotation.Resource;
 import java.io.IOException;
-import java.util.List;
 import jakarta.ejb.EJB;
+import jakarta.jms.Connection;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @WebServlet("/MedicineServlet")
 public class MedicineServlet extends HttpServlet {
 
     @EJB
     private MedicineEJB medicineEJB;
-    
-    @Resource(name = "aptekaDB")
+
+    @Resource(name = "aptekaDB")    //java:comp/env/jdbc/aptekaDB
     private DataSource dataSource;
 
     private MedicineDAO medicineDAO;
-    
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        Connection connection = MedicineDAO.getConnection();
+        medicineDAO = new MedicineDAO(connection);
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
