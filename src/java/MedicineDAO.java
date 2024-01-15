@@ -6,19 +6,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 public class MedicineDAO {
 
-    private Connection connection;
+    @PersistenceContext(unitName = "apteka_medicine")
+    private EntityManager em;
+
+    private final Connection connection;
 
 //    public void setConnection(Connection connection) {
 //        this.connection = connection;
 //    }
-
     public MedicineDAO(Connection connection) {
         this.connection = connection;
     }
-    
+
+    MedicineDAO(jakarta.jms.Connection dbConnection) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     // Метод для получения списка лекарств из базы данных
     public List<Medicine> getAllMedicines() {
         List<Medicine> medicines = new ArrayList<>();

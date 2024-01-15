@@ -1,8 +1,10 @@
 // MedicineServlet.java
 
+import jakarta.activation.DataSource;
+import jakarta.annotation.Resource;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.List;
+import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,26 +14,13 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("/MedicineServlet")
 public class MedicineServlet extends HttpServlet {
 
+    @EJB
+    private MedicineEJB medicineEJB;
+    
+    @Resource(name = "aptekaDB")
+    private DataSource dataSource;
+
     private MedicineDAO medicineDAO;
-
-//    @Override
-//    public void init() throws ServletException {
-//        super.init();
-//        // Инициализация объекта MedicineDAO при старте сервлета
-//        // (вы можете использовать Dependency Injection для более сложных приложений)
-//        Connection dbConnection = (Connection) getServletContext().getAttribute("dbConnection");
-//        medicineDAO = new MedicineDAO(dbConnection);
-//        medicineDAO.setConnection(dbConnection);
-//    }
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        // Инициализация объекта MedicineDAO при старте сервлета
-        // (вы можете использовать Dependency Injection для более сложных приложений)
-        Connection dbConnection = (Connection) getServletContext().getAttribute("dbConnection");
-        medicineDAO = new MedicineDAO(dbConnection);
-    }
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -40,7 +29,7 @@ public class MedicineServlet extends HttpServlet {
         if ("edit".equals(action)) {
             // Логика для редактирования
             int id = Integer.parseInt(request.getParameter("id"));
-            Medicine medicine = medicineDAO.getMedicineById(id);
+            Medicine medicine = medicineEJB.getMedicineById(id);
 
             // Убедимся, что medicine не равен null, прежде чем установить атрибут
             if (medicine != null) {
@@ -49,7 +38,7 @@ public class MedicineServlet extends HttpServlet {
         }
 
         // Логика для отображения списка лекарств
-        List<Medicine> medicines = medicineDAO.getAllMedicines();
+        List<Medicine> medicines = medicineEJB.getAllMedicines();
         request.setAttribute("medicines", medicines);
 
         // Перенаправление на JSP страницу
