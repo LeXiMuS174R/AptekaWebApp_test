@@ -18,20 +18,24 @@ public class MedicineDAO {
     @PersistenceContext(unitName = "apteka_medicine")
     private EntityManager em;
 
+//    public MedicineDAO() {
+//        // Пустое тело конструктора
+//    }
     private final Connection connection;
 
-    public MedicineDAO(Connection connection) {
-        this.connection = connection;
+    public static Connection getConnection() throws SQLException {
+        String url = "jdbc:postgresql://localhost:5432/apteka_medicine";
+        String username = "postgres";
+        String password = "qwe123";
+        return DriverManager.getConnection(url, username, password);
     }
 
-    public static jakarta.jms.Connection getConnection() {
-        try {
-            // Assume DriverManager is imported and configured properly
-            jakarta.jms.Connection connection = (jakarta.jms.Connection) DriverManager.getConnection("jdbc:postgresql://localhost:5432/apteka_medicine", "postgres", "qwe123");
-            return connection;
-        } catch (SQLException e) {
-            throw new RuntimeException("SQLException class not found", e);
-        }
+    public MedicineDAO() throws SQLException {
+        this.connection = getConnection();
+    }
+
+    MedicineDAO(Connection connection) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 //    public List<Medicine> getAllMedicines() {
@@ -41,7 +45,6 @@ public class MedicineDAO {
 //    public Medicine getMedicineById(int id) {
 //        return em.find(Medicine.class, id);
 //    }
-
     @PreDestroy
     public void destruct() {
         em.close();

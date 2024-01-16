@@ -1,16 +1,20 @@
 // MedicineServlet.java
 
-import jakarta.activation.DataSource;
+//import jakarta.activation.DataSource;
 import jakarta.annotation.Resource;
 import java.io.IOException;
 import jakarta.ejb.EJB;
-import jakarta.jms.Connection;
+import java.sql.Connection;
+import javax.sql.DataSource;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/MedicineServlet")
 public class MedicineServlet extends HttpServlet {
@@ -23,9 +27,13 @@ public class MedicineServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        super.init();
-        Connection connection = MedicineDAO.getConnection();
-        medicineDAO = new MedicineDAO(connection);
+        try {
+            super.init();
+            Connection connection = MedicineDAO.getConnection();
+            medicineDAO = new MedicineDAO(connection);
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicineServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
