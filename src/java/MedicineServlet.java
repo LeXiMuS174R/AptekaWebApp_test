@@ -15,7 +15,7 @@ import java.util.List;
 @WebServlet("/MedicineServlet")
 public class MedicineServlet extends HttpServlet {
 
-    @Resource(name = "java:global/jdbc/aptekaDB")    //java:comp/env/jdbc/aptekaDB
+    @Resource(name = "jdbc/aptekaDB")    //java:comp/env/jdbc/aptekaDB
     private DataSource dataSource;
 
     @EJB
